@@ -1,0 +1,289 @@
+      Linux Training Notes
+      
+    • uname -r -> gives kernel version
+    • uname -a -> ubuntu version
+
+OS is a set of programs that manipulates an interacts with the hardware and provide an environment to run various application programs.
+
+Advantages of Linux OS:
+    • Free/open source.
+    • Portable on any hardware machine.
+    • Linux is internally secure.(We don’t require any third party antivirus)
+    • Linux is scalable or modular.
+    • Expected to run 24*7 without rebooting.
+    • Very short debug time.(Errors/Mistakes/bugs/failures/faults)
+      
+Linux License -> GPL(GNU Public license)
+
+Linux Booting Sequence:
+    • Power ON 
+      -> CPU is going to execute some predefined jump instruction from the CPU  registers(hardcoded by vendor).
+	-> Search for BIOS code, jumps to preferred memory location in ROM.
+ 
+    • BIOS
+      -> Initializes all the onboard controllers in the motherboard.
+      -> Search for Bootloader code from the booting device(hard disc).
+      -> Generally, the first partition of the any storage device have the bootloader code.
+      -> Once, bootloader code is found the BIOS job is done.
+       
+    • Bootloader
+      -> In Linux, bootloader name is GRUB(Grand Unified Bootloader)
+      -> Bootloader from the hard disc loads OS images into the RAM.
+      -> It scans the hard disc for the OS images. Once, it find the OS images, it list the users.
+      -> Now Bootloader stops executing.
+      
+    • Kernel Startup
+      -> Now, Linux Kernel OS starts executing in the RAM.
+      -> Linux Kernel is the first software program that is loaded in the RAM and executes untill we shut down the system.
+      -> Creating lots of Kernel data structures(DS for devices, file system, interrupt management, priority management, memory management).
+      -> Creating threads(Initializes process->login process->login page).
+
+Compilation process:
+    • Preprocessor -> gcc -E filename.c -o filename.i
+    • Compiler -> gcc -S filename.i -o filename.s
+    • Assembler-> gcc -C filename.s -o filename.o
+    • Linker-> gcc filename.c -o filename.exe(Dynamic)/gcc -static -o filename.exe
+      //Static linker is appending the entire C library with the object code of the source.
+      //Dynamic linker is appending just the required library function.
+      ELF 64 – bit file format: Linux OS understands ELF(Executable loadable format file) 64 bit file format. Compiler will process and the processed code is packed in ELF 64 bit file format.
+
+VIM editor:
+
+It is the most popular editor in Linux OS. It is a command oriented editor. It has two modes:
+    • Insertion mode: Whatever we write on screen, it is operated in insertion mode. 
+    • Command mode: Whenever we press some related keys, it is operated in command mode. In command mode we got more options to control.
+
+-> w – saving
+-> q – quit
+-> l – move cursor to right side
+-> h – move cursor to left side
+-> j – move cursor down
+-> k – move cursor up
+-> o – new line below cursor + insertion mode
+-> O – add a new line above the cursor + insertion mode
+-> a – insertion happens after the cursor position
+-> A – Insertion happens at the end of the line
+-> yy – copy a particular line
+-> p – paste
+-> x – delete data
+-> u – undo operation
+
+Source Code Browsing Tool:
+    • CScope: It is used to examine symbols(variable, function, macros) of source code. Once cscope is entered from terminal it will take to interactive screen with multiple options to examine source code.
+      Cscope -R is going to create a cross reference file ‘cscope.out’ that is used by cscope tool.
+    • Ctags: It is a programming tool used for software development process in large applications used in Linux/Unix variant operating systems. It supports many programming languages along with C. Ctags is creating a tag file and it will contain the names(Object/symbol) found in source file or the header file.
+      Ctags create a file that shows the index of the objects. Ctags internally uses locators.
+
+	Ctags >> locators >> which name(var/fun) is used
+			     >> path name
+			     >> line in which variable is used
+			     >> type of var/fun
+Advantages of ctags:
+    • Quick access across the files.
+    • Provide complete function information.
+    • Tells particular name is variable or function.
+
+Repository of user header files -> /usr/include
+Repository of user library files -> /usr/lib or /usr/local/lib
+
+Compiling multiple files and generating single executible files:
+
+    • gcc one.c two.c three.c -o output (no funtion should be repeated).
+    • The other way is including all files in one file using #include””.
+    • We can use Makefile and make tool.
+
+Writing all the file names for multiple file compilation, much time spent only in writng gcc commands. To solve this issue, replace gcc with Makefile and make tool that helps in compiling multiple files. It is difficult for the gcc to compile the source file which are in different directories and the folders. Makefile and make tool will manage all the source file and header files to be at one place. 
+
+make:
+    • make is a programming build development tool used in Linux and Unix OS in large application software.
+    • make tool automatically determines, which files needed to be recompiled.
+    • make tool gets all the information to build a program from a file called as Makefile.
+    • Makefile contains set of commands that are similar to terminal commands that uses variable names and target names to create object files.
+    • make executes shell commands.
+    • gcc commands are executed by Makefile.
+    • Makefile is a text file that contains the complete procedure for building built executable.
+Rules:
+    • Source file, header files and Makefile should be in one common directory.
+    • Makefile may have variables.
+    • Margins says where variable should start from.
+    • Target are labels to Makefile. Under the target we write instructions. These instructions are executed by Makefile.
+Syntax : target
+targetname :
+<-Tab-> write the command to be executed by Makefile.
+
+    • find is a shell command that finds the filenames that ends with particular extensions.
+    • find -name ‘*.c’ -> After this command all the files with .c extension will get printed.
+    • SRC = $(shell find -name ‘*.c’) -> After this command all the files with .c extension are getting stored in variable SRC.
+    • gcc ($SRC) -o out -> means  dereferencing the variable SRC means all the .c files are getting replaced in the current line.
+    • ‘#’ is used for comments inside the Makefiles.
+
+GDB GNU Debugger:
+GDB is a powerful debugging tool used for C and C++ programming languages. GDB is a free software used with Linux/UNIX OS.
+    • GDB allows the user to stop the program execution in middle and also allows the user to probe during an application crash.
+    • GDB operates with the executable file that is produced by the compiler.
+    • GDB never works with .c file. 
+    • When we compile the cource file with -g option, a symbol table information is added to the executable file.
+    • GDB uses commands for debugging.
+    • GDB is a powerful tool that can directly jump to any particular memory location by using x command.
+GDB commands: 
+    • breakpoint or b: We need to stop the program execution in middle for that we use break points. To apply breakpoints we need break functions and break line numbers, where the program pauses or stop the execution. Most of the time breakpoint is applied at the main funtion because we really don’t know where the error has occured. After breakpoint is set, now execute gdb run command.
+      
+    • run or r: program executes till breakpoint.
+      
+    • next or n: The next command will take to the next line of the code.
+      
+    • step or s: The step command will also take to the next line of the code but there is some difference. Step command will step into the function call while next command will execute the function call.
+      
+    • list or l: list command is going to list the entire program.
+      
+    • print or p: print command will print the values of the variables.
+      
+    • quit or q: q is for quit.
+
+    • info locals: info locals will provide the local variable information.
+       
+    • p/x: It gives the hexadecimal value of variable.
+      
+    • p/t: It gives the binary value of variable.
+      
+    • p/o: It gives the octal value of variable.
+      
+    • x/d: x is memory command jumping to the address and accessing entire memory over that address.
+      
+    • x/o: It is a memory command jumping to the addresss and accessing entire memory and displaying it in octal format.
+
+Providing inputs to the program while execution:
+-> using scanf(), gets().
+-> command line arguments.
+
+String can be stored as:
+char *s = “linux”;
+char ch[] = “linux”;
+Data can not be modified.
+Data can be modified.
+String and pointer are stored at separate location.
+String is stored in same location.
+
+After compiling source code a.out file is divided into segments:
+-> bss segment
+-> data segment
+-> test segement
+    • All statements of our functions are converted into instruction and are stored into text segment of a.out executable file.
+    • Data segment contains initialized global and static variable.
+    • BSS(Block started by symbol) contains uninitialized global and static variables and by default they are initialized with zero.
+    • Heap segment contains memory for DMA variables.
+    • The moment main is getting executed memory is allocated in stack segment.
+    • Heap and stack contains in executable file.
+    • size filename will show the “text data bss hex” details.
+Command line arguments are parameters that are passed to the program during execution time from command line interface.
+Syntax: int main(int argc, char argv* argv[])
+
+int * ptr; // pointer declaration
+* ptr; //dereferencing a pointer
+scanf(“%d %*d %d”,10,20,30); // %*d says don’t read the value
+
+    • GDB is not so effective when bug happens to be in heap segment. So, separate class of tools are used for tracking the bugs when they happen in heap segment.
+    • Memory Profiling Tools -> Heap profiling tools are used when bugs happen to be in heap segment.
+    • There is one disadvantage of calloc and malloc that whatever memory we ask to assign to pointer, it always tends to assign more memory so there is wastage of memory.
+    • gcc -g filename.c -o filename -lefence //integrating application with memory profiling library.
+      
+Electric fence:
+
+Most of the time if we observe real time applications debug examples bug happens to be from users point of view:
+    • Accidentally, dereferencing a NULL pointer.
+    • Accidentally, derefrencing an uninitialized pointer.
+    • Accidentally, dereferencing a pointer which is already freed.
+    • Wrting after the end of the memory allocation.
+    • Writing before the start of the allocated memory.
+    • Standard c library is allocating more memory than requested so gdb and gcc failed to trace out memory violations.
+    • Electric fence is a memory debugger and also called as memory profile library.
+    • Electric fence is library has its own implementation of malloc() and calloc().
+    • When programmer links electric fence with the application, EF will have dominance over standard C library memory functions(malloc and calloc).
+    • If memory error occurs, electric fence triggers application program crash via segmentation fault.
+    • Electric fence can identify the bugs writing beyond upper boundary region of a memory allocation.
+    • Electrinc fence can identify if a program is writing before malloc memory allocation/underrun error.
+    • Export EF_PROTECT_BELOW = 1 -> electric fence environmental variable(It will check if data is inserted before the start of allocated memory).
+      
+Segmentation Fault: When program is compiled and executed memory segments are allocated in the RAM. Our program is supposed to access the entire memory segment that is allocated that is our program can use text segment, data segment, bss segment, heap segment and stack segment. If program is trying to access region beyond this segment leads to segmentation fault causing the application to terminate.
+
+VALGRIND:
+
+Valgrind is a standalone debugger used at run time:
+    • To identify errors due to heap memory violations.
+    • Also used as memory profiling tool.
+      
+Valgrind runs without electric fence and use same standard C library functions and identify the program errors.
+
+MMV
+   |_________________________|
+   |                                                  |
+Virtual Address       RAM(Physical Address)
+
+To the application and CPU, virtual address are written. Kernel maps the virtual address to respective physical addresses. Incase the program is using invalid addresses, Kernel fails to map physical address for invalid addresses. Processer raises an error to the Kernel. Now Kernel looks for the appropriate program i.e. making use of an invalid addresses and terminates the application or a program through segmentation fault.
+
+Error: A mistake in programming code is error.
+
+Defect: Before the code is released to the client, code is tested by the testing team to check whether code is meeting the requirements. If an error is detected by the tested than it is called as programming defect.
+
+Bug: If the defect is accepted by respective development team then it is called as bug. Fixing and providing solution is called debugging.
+
+Failure: Inability of the system software to execute and perform task function. Ex: breakdown in operating system, system hardware failure.
+
+Fault: Fault arises due to some condition and leads to software failure. Ex: Page Fault(Inability of Kernel to map physical address)
+
+ARM Cross Compilation using Makefile:
+
+Compiler are of two types:
+    1. Native compilers -> compilation and execution on local processor(Intel).
+    2. Cross compilers -> Req: On Intel architecture write the program and generate executable for ARM achitecture so that the cross compilers are nedded to be installed on Intel Achitecture.
+
+Gcc-arm-linux-gnueabi -> Executable Application Binary Interface
+
+Cross compilation is a process of generating executable files for other architectures.
+
+CC = arm-linux-gnueabi-gcc
+
+all:
+        $(CC) four.c add.c sub.c -o out
+
+Makefile Dependencies:
+
+Makefile contains variables, contains targets and targets may have optional dependencies. 
+    • Sometimes targets may depend on other files called as dependent file. So, dependent file is a input to create target files.
+
+$(CC) = gcc
+
+one: one.o add.o sub.o
+            $(CC) one.o add.o sub.o -o output
+
+one.o: one.c file.h
+            $(CC) -c one.c
+
+add.o: add.c file.h
+            $(CC) -c add.c
+
+sub.o: sub.c file.h
+            $(CC) -c sub.c
+
+clean: 
+            rm -rf *.o output
+
+Linux System Programming:
+
+Linux Kernel Architecture:
+
+
+
+
+Application is a software which is readily available to use by end user. User space contains all the application. Kernel space contains set of programs.]
+
+Kernel-> Core of the OS is Kernel. It is a software that talks to the hardware. Kernel is the first software program that is loaded into RAM and executes untill power off. Kernel is quite different from hardware.
+
+Layered Achitecture:
+Whenever application wants to communicate with the hardware. Application will make request to the kernel and Kernel on behalf of application is making a request to hardware. Applications can never interact directly with the hardware. 
+
+Application
+Kernel
+Hardware
+
+Shell program acts as a bridge between user and kernel.
