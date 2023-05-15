@@ -1,0 +1,4 @@
+Hello
+4
+10 written to file
+10 size and LINUX is read
